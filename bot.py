@@ -4,6 +4,7 @@ PocketPal — a friendly general-purpose Telegram bot.
 Runs in two modes automatically:
   - Locally: long polling (just run `python bot.py`)
   - On Render: webhook mode (detected via RENDER_EXTERNAL_URL)
+  - On PythonAnywhere: served via flask_app.py (WSGI)
 
 Required environment variable:
   BOT_TOKEN — your token from @BotFather
@@ -23,11 +24,15 @@ from telegram.ext import (
     filters,
 )
 
-# Load a local .env file if python-dotenv is installed (optional, for local dev)
+# Load a .env file sitting next to this script if python-dotenv is installed.
+# The explicit path matters on servers (e.g. PythonAnywhere), where the
+# process's working directory is not the project folder.
 try:
+    from pathlib import Path
+
     from dotenv import load_dotenv
 
-    load_dotenv()
+    load_dotenv(Path(__file__).resolve().parent / ".env")
 except ImportError:
     pass
 
