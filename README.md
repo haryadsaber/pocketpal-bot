@@ -35,7 +35,30 @@ Edit `.env` and paste your real token from @BotFather, then:
 py bot.py
 ```
 
-## Deploy free on Render (no credit card)
+## Deploy free on PythonAnywhere (no credit card, ever)
+
+1. Sign up free at [pythonanywhere.com](https://www.pythonanywhere.com) (Beginner plan). Your username becomes your bot's URL: `https://USERNAME.pythonanywhere.com`
+2. Open a **Bash console** and run:
+   ```
+   git clone https://github.com/haryadsaber/pocketpal-bot.git
+   cd pocketpal-bot
+   pip install --user -r requirements.txt
+   echo "BOT_TOKEN=your-token-here" > .env
+   ```
+3. Go to **Web** tab → **Add a new web app** → Manual configuration → Python 3.10
+4. Set **Source code** to `/home/USERNAME/pocketpal-bot`, then edit the **WSGI configuration file** so it ends with:
+   ```python
+   import sys
+   sys.path.insert(0, "/home/USERNAME/pocketpal-bot")
+   from flask_app import app as application
+   ```
+5. Click **Reload**, then register the webhook (one-time, from the Bash console):
+   ```
+   python3 -c "import requests; print(requests.post('https://api.telegram.org/bot<TOKEN>/setWebhook', data={'url': 'https://USERNAME.pythonanywhere.com/<TOKEN>'}).json())"
+   ```
+6. Message your bot — done! Free apps just need the **"Run until 3 months from today"** button clicked when PythonAnywhere emails you (every 3 months).
+
+## Alternative: deploy on Render
 
 1. **Put the code on GitHub**
    - Create a free account at github.com → New repository (e.g. `pocketpal-bot`, public)
